@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons'
 import Contacts from './screens/Contacts'
 import Chat from './screens/Chat'
 import ChatHeader from './components/ChatHeader'
+import signOut from './components/SignOut'
 
 LogBox.ignoreLogs([
   'Setting a timer',
@@ -77,6 +78,7 @@ function App() {
             options={{ title: 'Parlay' }}
             component={Home}
           />
+
           <Stack.Screen
             name="contacts"
             options={{
@@ -97,7 +99,7 @@ function App() {
   )
 }
 
-function Home() {
+function Home({}) {
   const {
     theme: { colors },
   } = useContext(Context)

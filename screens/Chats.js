@@ -6,6 +6,7 @@ import { auth, db } from '../firebase'
 import ContactsFloatingIcon from '../components/ContactsFloatingIcon'
 import ListItem from '../components/ListItem'
 import useContacts from '../hooks/useHooks'
+import SignOut from '../components/SignOut'
 
 const Chats = () => {
   const { currentUser } = auth
@@ -56,6 +57,7 @@ const Chats = () => {
           user={getOtherUser(room.otherUser, contacts)}
         />
       ))}
+      {/* <SignOut /> */}
       <ContactsFloatingIcon />
     </View>
   )

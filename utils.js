@@ -5,12 +5,15 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { storage } from './firebase'
 
 export const pickImage = async () => {
-  let result = ImagePicker.launchCameraAsync()
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.All,
+    allowsEditing: true,
+  })
   return result
 }
 
 export const askForPermission = async () => {
-  const { status } = await ImagePicker.requestCameraPermissionsAsync()
+  const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
   return status
 }
 
