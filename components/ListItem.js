@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useContext } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
-import '../context/Context'
+import Context from '../context/Context.js'
 import { Grid, Row, Col } from 'react-native-easy-grid'
 import Avatar from './Avatar'
 
@@ -25,9 +25,27 @@ const ListItem = ({ type, description, user, style, time, room, image }) => {
         <Col style={{ marginLeft: 10 }}>
           <Row style={{ alignItems: 'center' }}>
             <Col>
-              <Text>{user.contactName || user.displayName}</Text>
+              <Text
+                style={{ fontWeight: 'bold', fontSize: 16, color: colors.text }}
+              >
+                {user.contactName || user.displayName}
+              </Text>
             </Col>
+            {time && (
+              <Col style={{ alignItems: 'flex-end' }}>
+                <Text style={{ color: colors.secondaryText, fontSize: 11 }}>
+                  {new Date(time.seconds * 1000).toLocaleDateString()}
+                </Text>
+              </Col>
+            )}
           </Row>
+          {description && (
+            <Row style={{ marginTop: -5 }}>
+              <Text style={{ color: colors.secondaryText, fontSize: 13 }}>
+                {description}
+              </Text>
+            </Row>
+          )}
         </Col>
       </Grid>
     </TouchableOpacity>
