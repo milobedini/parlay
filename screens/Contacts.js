@@ -23,7 +23,7 @@ const Contacts = () => {
 }
 
 function ContactPreview({ contact, image }) {
-  const { rooms } = useContext(Context)
+  const { unfilteredRooms } = useContext(Context)
   const [user, setUser] = useState(contact)
 
   useEffect(() => {
@@ -48,8 +48,8 @@ function ContactPreview({ contact, image }) {
       type="contacts"
       user={user}
       image={image}
-      room={rooms.find((room) =>
-        rooms.participantsArray.includes(contact.email)
+      room={unfilteredRooms.find((room) =>
+        room.participantsArray.includes(contact.email)
       )}
     />
   )

@@ -4,10 +4,13 @@ import Context from '../context/Context'
 import { View, Text } from 'react-native'
 import { auth, db } from '../firebase'
 import ContactsFloatingIcon from '../components/ContactsFloatingIcon'
+import ListItem from '../components/ListItem'
+import useContacts from '../hooks/useHooks'
 
 const Chats = () => {
   const { currentUser } = auth
-  const { rooms, setRooms } = useContext(Context)
+  const { rooms, setRooms, setUnfilteredRooms } = useContext(Context)
+  const contacts = useContacts()
 
   // query for chat rooms in firestore
   const chatsQuery = query(
@@ -18,25 +21,41 @@ const Chats = () => {
   useEffect(() => {
     const unsubscribe = onSnapshot(chatsQuery, (querySnapshot) => {
       //   only display conversations containing messages
-      const parsedChats = querySnapshot.docs
-        .filter((doc) => doc.data().lastMessage)
-        .map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-          //   set the other user in the chat
-          otherUser: doc
-            .data()
-            .participants.find((u) => u.email != currentUser.email),
-        }))
-      setRooms(parsedChats)
+      const parsedChats = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+        //   set the other user in the chat
+        otherUser: doc
+          .data()
+          .participants.find((u) => u.email != currentUser.email),
+      }))
+      setUnfilteredRooms(parsedChats)
+      setRooms(parsedChats.filter((doc) => doc.lastMessage))
     })
     // exit realtime listener
     return () => unsubscribe()
   }, [])
 
+  const getOtherUser = (user, contacts) => {
+    const userContact = contacts.find((c) => c.email === user.email)
+    if (userContact && userContact.contactName) {
+      return { ...user, contactName: userContact.contactName }
+    }
+    return user
+  }
+
   return (
     <View style={{ flex: 1, padding: 5, paddingRight: 10 }}>
-      <Text></Text>
+      {rooms.map((room) => (
+        <ListItem
+          type="chat"
+          description={room.lastMessage.text}
+          key={room.id}
+          room={room}
+          time={room.lastMessage.createdAt}
+          user={getOtherUser(room.otherUser, contacts)}
+        />
+      ))}
       <ContactsFloatingIcon />
     </View>
   )
