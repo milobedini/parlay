@@ -95,6 +95,9 @@ const Chat = () => {
       }
       const emailHash = `${currentUser.email}:${otherUser.email}`
       setRoomHash(emailHash)
+      if (selectedImage && selectedImage.uri) {
+        await sendImage(selectedImage.uri, emailHash)
+      }
     })()
   }, [])
 
@@ -204,11 +207,14 @@ const Chat = () => {
               }}
               onPress={() => {
                 if (text && onSend) {
-                  onSend({
-                    text: text.trim(),
-                    user,
-                    _id: messageIdGenerator(),
-                  })
+                  onSend(
+                    {
+                      text: text.trim(),
+                      user,
+                      _id: messageIdGenerator(),
+                    },
+                    true
+                  )
                 }
               }}
             >
@@ -243,7 +249,6 @@ const Chat = () => {
             <TouchableOpacity
               onPress={() => {
                 setModalVisible(true)
-
                 setSelectedImageView(props.currentMessage.image)
               }}
             >
